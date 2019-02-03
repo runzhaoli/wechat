@@ -1,0 +1,58 @@
+@charset "utf-8";
+
+.login { background-color: #fcfcfc; border: 1px solid #f6f6f6; position: relative; width: 600px; height: 450px; margin-left: auto; margin-right: auto; margin-top: 10%; }
+
+.login button { -webkit-transition: all 0.1s linear; -moz-transition: all 0.1s linear; -o-transition: all 0.1s linear; transition: all 0.1s linear; }
+
+.login .head { border-bottom: 1px solid #eee; position: relative; width: 100%; height: 30%; }
+.login .head .title { position: absolute; left: 8%; bottom: 20%; line-height: 46px; font-size: 40px; }
+.login .head .help { position: absolute; right: 15px; top: 15px; width: 40px; height: 40px; }
+.login .head .help button { outline: none; width: 100%; height: 100%; border: 1px solid #eee; background-color: #fff; color: #3399CC; font-size: 14px; }
+.login .head .help button:hover, .login .head .help button:active { background-color: #ff766c; color: #fff; }
+
+.login .error { position: absolute; top: 30%; z-index: 5; width: 100%; height: 32px; margin-top: -16px; text-align: center; }
+.login .error .context { position: relative; width: 360px; height: 100%; border: 1px solid #ff6666; background-color: #fcfcfc; color: #ff6666; padding-left: 4px; padding-right: 40px; margin-left: auto; margin-right: auto; }
+.login .error .context .remove { position: absolute; right: 0px; top: 0px; width: 40px; height: 100%; border-left: 1px solid #fff; }
+.login .error .context .remove button { outline: none; width: 100%; height: 100%; border: 0; background-color: #fcfcfc; color: #FF6666; font-size: 14px; }
+.login .error .context .remove button:hover, .login .error button:active { background-color: #ff766c; color: #fff; }
+
+.login .loading { position: relative; width: 100%; height: 70%; padding-top: 25px; }
+.login .loading .text { position: absolute; bottom: 25%; left: 0px; width: 100%; text-align: center; margin-left: auto; margin-right: auto; height: 30px; line-height: 30px;}
+.login .loading .spinner { width: 60px; height: 60px; background-color: #3276b1; margin: 10% auto; -webkit-animation: rotateplane 1.2s infinite ease-in-out; animation: rotateplane 1.2s infinite ease-in-out; }
+@-webkit-keyframes rotateplane { 0% { -webkit-transform: perspective(120px) } 50% { -webkit-transform: perspective(120px) rotateY(180deg) } 100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) } }
+@keyframes rotateplane { 0% { transform: perspective(120px) rotateX(0deg) rotateY(0deg); -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg); } 50% { transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); } 100% { transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); } }
+
+.login .body { position: relative; width: 100%; height: 70%; padding-top: 25px; }
+
+.login .body .ipt { position: relative; margin-top: 10px; margin-left: auto; margin-right: auto; border: 1px solid #eee; width: 360px; background-color: #fff; }
+.login .body .ipt input { font-size: 14px; padding: 14px 8px; width: 330px; border: 0px; }
+.login .body .ipt button { outline: none; width: 100%; height: 100%; border: 0; background-color: #6699cc; color: #fff; padding: 14px; }
+.login .body .ipt button:hover, .login .body button:active { background-color: #0099CC; }
+
+.login .body .verify { }
+.login .body .verify i { font-size: 12px; }
+.login .body .verify input { width: 200px; }
+.login .body .verify img { width: 90px; height: 30px; border: 1px solid #fff; margin-top: -16px\9; margin-top: -4px\0; margin-top: -2px\9\0; margin-top: -2px; }
+.login .body .verify .refresh { position: absolute; right: 0px; top: 0px; width: 40px; height: 100%; border: 0px; }
+.login .body .verify .refresh button { outline: none; width: 100%; height: 100%; border: 0; background-color: #fff; color: #6699cc; padding: 14px; }
+.login .body .verify .refresh button i { font-size: 16px; }
+.login .body .verify .refresh button:hover, .login .body .verify .refresh button:active { color: #ff766c; }
+
+.login .body .remeber { border: 0px; background-color: #fcfcfc; margin-top: 20px; }
+.login .body .remeber #checkbox { width: 30px; float: left; }
+
+.login .body .sign { margin-top: 15px; }
+
+.login .foot { background-color: #3399CC; position: relative; width: 100%; height: 0%; }
+
+@media (max-width: 767px) {
+	.login { position: absolute;  left: 0px; right: 0px; top: 0px; bottom: 0px; margin-top: 0px; width: 100%; height: 100%; min-height: 480px; }
+	.login .head { height: 35%; }
+	.login .error { top: 35%; }
+	.login .error .context { width: 280px; }
+	.login .loading .text { bottom: 40%; }
+	.login .body { height: 65%; }
+	.login .body .ipt { width: 280px; }
+	.login .body .ipt input { width: 250px; }
+	.login .body .verify input { width: 120px; }
+}

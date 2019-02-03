@@ -1,0 +1,107 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+.app, .app-body {
+	height: 100%;
+	overflow: hidden;
+}
+
+.app {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	-webkit-transition: -webkit-transform 400ms ease;
+	-moz-transition: -moz-transform 400ms ease;
+	-o-transition: -o-transform 400ms ease;
+	transition: transform 400ms ease;
+	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, .4);
+	box-shadow: 0 0 4px rgba(0, 0, 0, .4);
+}
+
+.navbar {
+	position: relative;
+	min-height: 50px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+}
+
+.navbar-app {
+	min-height: 50px;
+	border-color: #ccc;
+	border-width: 1px;
+	border-style: solid;
+	color: #333;
+}
+
+.has-navbar-top .app-body {
+/* 	padding-top: 21px; */
+}
+
+.navbar-absolute-top {
+	top: 0;
+	border-bottom-width: 1px;
+	background: #fff;
+	color: #999;
+/* 	padding-top: 20px; */
+	min-height: 0px;
+}
+
+.has-navbar-bottom .app-body {
+	padding-bottom: 51px;
+}
+
+.navbar-absolute-bottom {
+	top: auto;
+	bottom: 0;
+	border-bottom: 0 none;
+	border-top-width: 1px;
+	background: #fff;
+	color: #777;
+}
+
+.navbar-absolute-top, .navbar-absolute-bottom {
+	position: absolute;
+	z-index: 1000;
+	border-width: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	margin: 0;
+}
+
+.app-content {
+	height: 100%;
+	overflow: hidden;
+}
+
+.app-content, .app-search {
+	position: relative;
+	width: 100%;
+}
+
+.app-body, .app-content {
+	display: block;
+	padding: 0;
+}
+
+.scrollable {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.scrollable-content {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+}

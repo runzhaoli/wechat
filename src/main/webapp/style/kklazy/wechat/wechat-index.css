@@ -1,0 +1,40 @@
+.ui-slider {
+	min-height: 168px;
+	margin-bottom: 30px;
+}
+
+.ui-slider-item {
+	height: 168px;
+}
+
+.ui-slider-item>p {
+	background: rgba(102, 153, 204, 0.9);
+	font-size: 12px;
+	font-family: 'Trebuchet MS', 'Microsoft YaHei', 'Lucida Grande', Helvetica, sans-serif;
+	margin: 0px;
+}
+
+.ui-slider-dots {
+	margin: 0px;
+}
+
+.ui-slider-dots .ui-state-active {
+	background: rgba(0, 204, 51, 0.9);
+	width: 7px;
+	height: 7px;
+}
+
+.ui-slider-dots>b {
+	border-radius: 0px;
+	background: #fff;
+}
+
+.thumbnail div {
+	text-align: center;
+}
+
+.thumbnail p {
+	height: 32px;
+	font-size: 11px;
+	margin: 0px;
+}

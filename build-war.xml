@@ -1,0 +1,95 @@
+<project name="trw" default="clean">
+	<property environment="env" />
+	<property file="${basedir}/build.properties" />
+	<property name="project.home" value="${basedir}" />
+	<property name="project.library" value="${project.home}/lib" />
+	<property name="project.source" value="${project.home}/source" />
+	<property name="project.target" value="${project.home}/target" />
+	<property name="project.main.java" value="${project.source}/main/java" />
+	<property name="project.main.resource" value="${project.source}/main/resources" />
+	<property name="project.web" value="${project.source}/main/webapp" />
+
+	<path id="classpath">
+		<fileset dir="${project.library}">
+			<include name="**/*.jar" />
+			<include name="**/*.JAR" />
+		</fileset>
+
+		<path path="${project.target}" />
+	</path>
+
+	<target name="prepare" description="Copy all 'src' to 'source'">
+		<mkdir dir="${project.source}" />
+		<mkdir dir="${project.target}/WEB-INF/classes" />
+
+		<copy todir="${project.source}" includeemptydirs="true">
+			<fileset dir="${project.home}/src" />
+		</copy>
+	</target>
+
+	<target name="compress-js-css" depends="prepare" description="Compress 'js' and 'css'">
+		<taskdef name="compress" classname="com.yahoo.platform.yui.compressor.YUICompressTask" >
+			<classpath refid="classpath" />
+		</taskdef>
+		<compress linebreak="50000" warn="false" munge="yes" charset="UTF-8" preserveallsemicolons="true" outputfolder="${project.target}/script/kklazy">
+			<fileset dir="${project.web}/script/kklazy">
+				<include name="**/*.js" />
+			</fileset>
+		</compress>
+		<compress linebreak="50000" warn="false" munge="yes" charset="UTF-8" preserveallsemicolons="true" outputfolder="${project.target}/style/kklazy">
+			<fileset dir="${project.web}/style/kklazy">
+				<include name="**/*.css" />
+			</fileset>
+		</compress>
+	</target>
+
+	<target name="compile" depends="compress-js-css" description="Copy all 'class' to 'WEB_INF/classes'">
+		<copy todir="${project.target}/WEB-INF/classes">
+			<fileset dir="${basedir}/bin">
+				<exclude name="m2e-wtp/**" />
+				<include name="**/*.class" />
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="archive" depends="compile">
+		<copy todir="${project.target}/WEB-INF/classes">
+			<fileset dir="${project.main.java}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<copy todir="${project.target}/WEB-INF/classes">
+			<fileset dir="${project.main.resource}" />
+		</copy>
+
+		<copy file="${basedir}/database.properties" todir="${project.target}/WEB-INF/classes/configs" overwrite="true"/>
+
+		<copy todir="${project.target}/WEB-INF/lib">
+			<fileset dir="${project.library}">
+				<exclude name="**/tools.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${project.target}">
+			<fileset dir="${project.web}">
+				<exclude name="script/*.js" />
+				<exclude name="style/*.css" />
+				<exclude name="WEB-INF/classes/**" />
+				<exclude name="**/web.xml" />
+			</fileset>
+		</copy>
+
+		<war destfile="${project.home}/${project.name}.war" webxml="${project.web}/WEB-INF/web.xml">
+			<fileset dir="${project.target}" />
+		</war>
+	</target>
+
+	<target name="clean" depends="archive">
+		<delete dir="${project.source}" />
+		<delete dir="${project.target}" />
+	</target>
+
+</project>

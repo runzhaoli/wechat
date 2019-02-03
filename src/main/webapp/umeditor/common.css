@@ -1,0 +1,19 @@
+*,*:before,*:after {
+	-webkit-box-sizing: inherit;
+	-moz-box-sizing: inherit;
+	box-sizing: inherit
+}
+.edui-editor-body .edui-body-container {
+	color: #000;
+	font-variant: normal;
+}
+.edui-combobox-menu .edui-combobox-item .edui-combobox-item-label, .edui-combobox-menu .edui-combobox-item label {
+	margin-bottom: 0px;
+	padding: 0px;
+}
+.edui-container {
+	box-shadow: none;
+}
+.edui-container .edui-toolbar {
+	box-shadow: none;
+}

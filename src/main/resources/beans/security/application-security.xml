@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/security
+						http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<global-method-security pre-post-annotations="enabled" ></global-method-security>
+	
+	<!-- 该路径下的资源不用过滤 -->
+	<http pattern="/"            security="none" />
+	<http pattern="/script/**"   security="none" />
+	<http pattern="/style/**"    security="none" />
+	<http pattern="/images/**"   security="none" />
+	<http pattern="/security/**" security="none" />
+
+	<http pattern="/lucky/**"   security="none" />
+	<http pattern="/seatingchart/**"   security="none" />
+	<http pattern="/hrcwechat/**"   security="none" />
+	<http pattern="/activitieswechat/**"   security="none" />
+
+	<!-- 上传文件的辅助类和文件目录 -->
+	<http pattern="/umeditor/**" security="none" />
+	<http pattern="/attached/**" security="none" />
+
+	<!-- 登录跳转页 -->
+	<http pattern="/webpages/index.jsp" security="none" />
+
+	<!-- access-denied-page 权限未通过跳转页面 -->
+	<!-- auto-config='true' 没有配置自定义UsernamePasswordAuthenticationFilter 则启动自动配置 -->
+	<http use-expressions="true" entry-point-ref="loginUrlAuthenticationEntryPoint" >
+
+		<!-- 修改默认的 j_spring_security_check 请求 -->
+		<!-- login-processing-url="" -->
+<!-- 		<form-login -->
+<!-- 			login-page="/security/login.kklazy" -->
+<!-- 			authentication-failure-url="/security/login.kklazy?e=error" -->
+<!-- 			default-target-url="/index.jsp" -->
+<!-- 			/> -->
+
+		<!-- 权限未通过的配置 -->
+		<access-denied-handler ref="accessDeniedHandler"/>
+			
+		<!-- logout-success-url:成功注销后跳转到的页面; -->
+		<logout logout-success-url="/security/login?e=logout" />
+        
+		<!-- 实现免登陆验证 -->
+		<remember-me key="kkLazy" />
+
+		<!-- id登陆唯一. 后登陆的账号会挤掉第一次登陆的账号 error-if-maximum-exceeded="true" 禁止2次登陆; 
+		session-fixation-protection="none" 防止伪造sessionid攻击. 用户登录成功后会销毁用户当前的session. 
+		创建新的session,并把用户信息复制到新session中. -->
+		<session-management
+			session-fixation-protection="none"
+			session-authentication-error-url="/security/login?e=session-error"
+			invalid-session-url="/security/login?e=session-timeout">
+			<concurrency-control max-sessions="10" error-if-maximum-exceeded="true" />
+		</session-management>
+		
+		<!-- 自定义用户验证 Filter -->
+		<custom-filter ref="verifyAuthenticationFilter" position="FORM_LOGIN_FILTER" />
+		
+		<!-- 自定义验证权限 Filter -->
+		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		
+	</http>
+	
+	<beans:bean id="rememberMeServices" class= "org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+		<beans:property name="userDetailsService" ref="userDetailsService"/>
+		<beans:property name="key" value="kkLazy"/>
+	</beans:bean>
+	
+	<!-- 重写 UsernamePasswordAuthenticationFilter -->
+	<beans:bean id="loginUrlAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/security/login"></beans:property>
+	</beans:bean>
+	<beans:bean id="accessDeniedHandler" class="kklazy.security.manager.DefaultPageAccessDeniedHandler">
+		<beans:property name="accessDeniedPage" value="/security/accessdenied"></beans:property>
+	</beans:bean>
+	<beans:bean id="verifyAuthenticationFilter" class="kklazy.security.filter.VerifyUsernamePasswordAuthenticationFilter">
+		<beans:property name="filterProcessesUrl" value="/j_spring_security_check"></beans:property>
+		<beans:property name="rememberMeServices" ref="rememberMeServices"></beans:property>
+		<beans:property name="authenticationSuccessHandler" ref="loginLogAuthenticationSuccessHandler"></beans:property>
+		<beans:property name="authenticationFailureHandler" ref="simpleUrlAuthenticationFailureHandler"></beans:property>
+		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
+	</beans:bean>
+	<beans:bean id="loginLogAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+		<beans:property name="defaultTargetUrl" value="/console/center"></beans:property>
+	</beans:bean>
+	<beans:bean id="simpleUrlAuthenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<beans:property name="defaultFailureUrl" value="/security/login?e=error"></beans:property>
+	</beans:bean>
+
+	<!-- 配置过滤器 -->
+	<beans:bean id="securityFilter" class="kklazy.security.filter.SecurityFilter">
+
+		<!-- 用户拥有的权限 -->
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+
+		<!-- 用户是否拥有所请求资源的权限 -->
+		<beans:property name="accessDecisionManager" ref="accessDecisionManager" />
+
+		<!-- 资源与权限对应关系 -->
+		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
+		
+	</beans:bean>
+
+	<!-- 实现了UserDetailsService的Bean -->
+	<authentication-manager alias="authenticationManager" erase-credentials="false">
+		<authentication-provider ref="authenticationProvider" />
+	</authentication-manager>
+
+	<!-- hideUserNotFoundExceptions 显示用户名找不到的错误 -->
+	<beans:bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="hideUserNotFoundExceptions" value="false" />
+		<beans:property name="userDetailsService" ref="userDetailsService" />
+		<beans:property name="passwordEncoder" ref="passwordEncode" />
+		<beans:property name="saltSource" ref="saltSource" />
+	</beans:bean>
+	
+	<!-- 盐值  [添加这个属性后，加密密码明文为:"密码明文{盐值}"] -->
+	<beans:bean id="passwordEncode" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+	<beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<beans:property name="userPropertyToUse" value="username"/>
+	</beans:bean>
+
+<!-- 	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">   -->
+<!-- 		<beans:property name="basename" value="springframework/security/messages/messages_zh_CN" />   -->
+<!-- 	</beans:bean> -->
+
+	<!-- Log 事件监听:实现了 ApplicationListener监听接口 -->
+	<!-- AuthenticationCredentialsNotFoundEvent -->
+	<!-- AuthorizationFailureEvent -->
+	<!-- AuthorizedEvent -->
+	<!-- PublicInvocationEvent -->
+	<beans:bean class="org.springframework.security.authentication.event.LoggerListener" />
+
+</beans:beans>
